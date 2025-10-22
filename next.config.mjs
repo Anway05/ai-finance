@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // Allow randomuser.me avatars
-    domains: ["randomuser.me"],
     remotePatterns: [
       {
         protocol: "https",
