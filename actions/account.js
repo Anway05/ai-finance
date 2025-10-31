@@ -94,7 +94,7 @@ export const updateDefaultAccount = async (accountId) => {
 }
 }
 
-export const bulkDeleteTransaction = async (transactionIds) => {
+export const bulkDeleteTransactions = async (transactionIds) => {
     try {
         const { userId } = await auth();
         if(!userId) throw new Error("Unauthorized");
