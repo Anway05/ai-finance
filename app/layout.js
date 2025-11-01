@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
+import { checkUser } from "@/lib/checkUser";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 
@@ -11,7 +12,8 @@ export const metadata = {
   description: "One stop Finance Platform",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const user = await checkUser();
   return (
     <ClerkProvider>
       <html lang="en">
@@ -19,7 +21,7 @@ export default function RootLayout({ children }) {
           <link rel="icon" href="/logo-sm.png" sizes="any" />
         </head>
         <body className={`${inter.className}`}>
-          <Header />
+          <Header user={user} />
           <main className="min-h-screen">{children}</main>
           <Toaster richColors />
 
