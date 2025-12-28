@@ -61,12 +61,18 @@ export function BudgetProgress({ initialBudget, currentExpenses}) {
     }, [error]);
 
 return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <div className="flex-1">
-          <CardTitle className="text-sm font-medium">
-            Monthly Budget (Default Account)
+    <Card className="card-surface rounded-3xl border border-border/70 relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none opacity-70 bg-[radial-gradient(circle_at_20%_10%,rgba(16,185,129,0.18),transparent_32%),radial-gradient(circle_at_90%_20%,rgba(244,171,72,0.16),transparent_30%)]" />
+      <div className="absolute -inset-px rounded-[28px] border border-white/5 opacity-60" />
+      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+        <div className="flex-1 space-y-2">
+          <p className="pill bg-primary/10 text-primary">Budget guardrail</p>
+          <CardTitle className="text-xl font-semibold text-white">
+            Default account budget
           </CardTitle>
+          <CardDescription className="text-muted-foreground text-sm">
+            Keep the month on track with a live budget dial.
+          </CardDescription>
           <div className="flex items-center gap-2 mt-1">
             {isEditing ? (
               <div className="flex items-center gap-2">
@@ -80,12 +86,12 @@ return (
                   disabled={isLoading}
                 />
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="icon"
                   onClick={handleUpdateBudget}
                   disabled={isLoading}
                 >
-                  <Check className="h-4 w-4 text-green-500" />
+                  <Check className="h-4 w-4 text-primary" />
                 </Button>
                 <Button
                   variant="ghost"
@@ -93,49 +99,53 @@ return (
                   onClick={handleCancel}
                   disabled={isLoading}
                 >
-                  <X className="h-4 w-4 text-red-500" />
+                  <X className="h-4 w-4 text-destructive" />
                 </Button>
               </div>
             ) : (
-              <>
-                <CardDescription>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
                   {initialBudget
-                    ? `$${currentExpenses.toFixed(
-                        2
-                      )} of $${initialBudget.amount.toFixed(2)} spent`
+                    ? `₹${currentExpenses.toFixed(2)} of ₹${initialBudget.amount.toFixed(2)} spent`
                     : "No budget set"}
-                </CardDescription>
+                </div>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsEditing(true)}
-                  className="h-6 w-6"
+                  className="h-7 w-7"
                 >
-                  <Pencil className="h-3 w-3" />
+                  <Pencil className="h-3.5 w-3.5" />
                 </Button>
-              </>
+              </div>
             )}
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-3 relative">
         {initialBudget && (
           <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>Spending</span>
+              <span>{percentUsed.toFixed(1)}% used</span>
+            </div>
             <Progress
               value={percentUsed}
               extraStyles={`${
-                // add to Progress component
                 percentUsed >= 90
-                  ? "bg-red-500"
+                  ? "bg-destructive"
                   : percentUsed >= 75
-                    ? "bg-yellow-500"
-                    : "bg-green-500"
+                    ? "bg-amber-400"
+                    : "bg-primary"
               }`}
             />
-            <p className="text-xs text-muted-foreground text-right">
-              {percentUsed.toFixed(1)}% used
-            </p>
           </div>
+        )}
+        {!initialBudget && (
+          <p className="text-sm text-muted-foreground">
+            Set a budget to start tracking this account.
+          </p>
         )}
       </CardContent>
     </Card>

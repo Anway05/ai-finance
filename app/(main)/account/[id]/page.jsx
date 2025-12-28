@@ -4,6 +4,7 @@ import { BarLoader } from "react-spinners";
 import { TransactionTable } from "../_components/transaction-table";
 import { notFound } from "next/navigation";
 import { AccountChart } from "../_components/account-chart";
+import { DeleteAccountButton } from "../_components/delete-account-button";
 
 export default async function AccountPage({ params }) {
   const accountData = await getAccountWithTransactions(params.id);
@@ -27,13 +28,14 @@ export default async function AccountPage({ params }) {
           </p>
         </div>
 
-        <div className="text-right pb-2">
+        <div className="text-right pb-2 flex flex-col items-end gap-2">
           <div className="text-xl sm:text-2xl font-bold">
             ${parseFloat(account.balance).toFixed(2)}
           </div>
           <p className="text-sm text-muted-foreground">
             {account._count.transactions} Transactions
           </p>
+          <DeleteAccountButton accountId={account.id} />
         </div>
       </div>
 

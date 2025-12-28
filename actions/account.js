@@ -109,3 +109,49 @@ export const bulkDeleteTransactions = async (transactionIds) => {
         
     }
 }
+
+export const deleteAccount = async (accountId) => {
+    try {
+        const { userId } = await auth();
+        if (!userId) throw new Error("Unauthorized");
+
+        const user = await db.user.findUnique({
+            where: { clerkUserId: userId },
+        });
+
+        if (!user) throw new Error("User not found");
+
+        const account = await db.account.findUnique({
+            where: {
+                id: accountId,
+                userId: user.id,
+            },
+        });
+
+        if (!account) throw new Error("Account not found");
+
+        // Delete account and ensure another default account is set if needed
+        await db.$transaction(async (tx) => {
+            await tx.account.delete({
+                where: { id: accountId },
+            });
+
+            // If user has remaining accounts and none is default, set one as default
+            const remaining = await tx.account.findMany({
+                where: { userId: user.id },
+            });
+
+            if (remaining.length > 0 && !remaining.some((a) => a.isDefault)) {
+                await tx.account.update({
+                    where: { id: remaining[0].id },
+                    data: { isDefault: true },
+                });
+            }
+        });
+
+        revalidatePath("/dashboard");
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}

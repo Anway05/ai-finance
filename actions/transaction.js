@@ -45,7 +45,7 @@ if (decision.isDenied()) {
     }
 
         const user = await db.user.findUnique({
-            where: { clerkId: userId },
+            where: { clerkUserId: userId },
         })
 
         if(!user) throw new Error("User not found");
@@ -101,7 +101,7 @@ export async function getTransaction(id){
     if(!userId) throw new Error("Unauthorized");
 
     const user =  await db.user.findUnique({
-        where: { clerkId: userId },
+        where: { clerkUserId: userId },
     })
 
     if(!user) throw new Error("User not found");
@@ -125,7 +125,7 @@ export async function updateTransaction(id,data){
         if(!userId) throw new Error("Unauthorized");
 
         const user =  await db.user.findUnique({
-            where: { clerkId: userId },
+            where: { clerkUserId: userId },
         });
 
         if(!user) throw new Error("User not found");

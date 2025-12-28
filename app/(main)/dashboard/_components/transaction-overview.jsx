@@ -36,7 +36,7 @@ const COLORS = [
 
 export function DashboardOverview({ accounts, transactions }){
     const [selectedAccountId, setSelectedAccountId] = useState(
-        accounts.find((a) => a.isdefault)?.id || accounts[0]?.id
+        accounts.find((a) => a.isDefault)?.id || accounts[0]?.id
     );
 
     // Filter transactions for selected account
@@ -80,17 +80,17 @@ export function DashboardOverview({ accounts, transactions }){
 
     return (
         <div className="grid gap-4 md:grid-cols-2">
-        {/* Recent Transactions Card */}
-        <Card>
+        <Card className="card-surface rounded-2xl border border-border/70 relative overflow-hidden">
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.12),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(244,171,72,0.12),transparent_28%)]" />
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-            <CardTitle className="text-base font-normal">
-                Recent Transactions
+            <CardTitle className="text-base font-semibold text-white">
+                Recent activity
             </CardTitle>
             <Select
                 value={selectedAccountId}
                 onValueChange={setSelectedAccountId}
             >
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="w-[160px] bg-background/50">
                 <SelectValue placeholder="Select account" />
                 </SelectTrigger>
                 <SelectContent>
@@ -112,23 +112,23 @@ export function DashboardOverview({ accounts, transactions }){
                 recentTransactions.map((transaction) => (
                     <div
                     key={transaction.id}
-                    className="flex items-center justify-between"
+                    className="flex items-center justify-between rounded-xl bg-background/40 p-3 border border-border/40"
                     >
                     <div className="space-y-1">
-                        <p className="text-sm font-medium leading-none">
+                        <p className="text-sm font-semibold text-white leading-none">
                         {transaction.description || "Untitled Transaction"}
                         </p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                         {format(new Date(transaction.date), "PP")}
                         </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-sm font-semibold">
                         <div
                         className={cn(
-                            "flex items-center",
+                            "flex items-center px-3 py-1 rounded-full",
                             transaction.type === "EXPENSE"
-                            ? "text-red-500"
-                            : "text-green-500"
+                            ? "bg-red-500/15 text-red-300"
+                            : "bg-emerald-500/15 text-emerald-300"
                         )}
                         >
                         {transaction.type === "EXPENSE" ? (
@@ -136,7 +136,7 @@ export function DashboardOverview({ accounts, transactions }){
                         ) : (
                             <ArrowUpRight className="mr-1 h-4 w-4" />
                         )}
-                        ${transaction.amount.toFixed(2)}
+                        ₹{transaction.amount.toFixed(2)}
                         </div>
                     </div>
                     </div>
@@ -146,30 +146,30 @@ export function DashboardOverview({ accounts, transactions }){
             </CardContent>
         </Card>
 
-        {/* Expense Breakdown Card */}
-        <Card>
+        <Card className="card-surface rounded-2xl border border-border/70 relative overflow-hidden">
+            <div className="absolute inset-0 pointer-events-none opacity-60 bg-[radial-gradient(circle_at_10%_0%,rgba(255,255,255,0.06),transparent_30%),radial-gradient(circle_at_90%_20%,rgba(16,185,129,0.1),transparent_32%)]" />
             <CardHeader>
-            <CardTitle className="text-base font-normal">
-                Monthly Expense Breakdown
+            <CardTitle className="text-base font-semibold text-white">
+                Monthly expense breakdown
             </CardTitle>
             </CardHeader>
-            <CardContent className="p-0 pb-5">
+            <CardContent className="p-0 pb-5 relative">
             {pieChartData.length === 0 ? (
-                <p className="text-center text-muted-foreground py-4">
+                <p className="text-center text-muted-foreground py-6">
                 No expenses this month
                 </p>
             ) : (
-                <div className="h-[300px]">
+                <div className="h-[320px]">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                     <Pie
                         data={pieChartData}
                         cx="50%"
                         cy="50%"
-                        outerRadius={80}
+                        outerRadius={90}
                         fill="#8884d8"
                         dataKey="value"
-                        label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
+                        label={({ name, value }) => `${name}: ₹${value.toFixed(2)}`}
                     >
                         {pieChartData.map((entry, index) => (
                         <Cell
@@ -179,7 +179,7 @@ export function DashboardOverview({ accounts, transactions }){
                         ))}
                     </Pie>
                     <Tooltip
-                        formatter={(value) => `$${value.toFixed(2)}`}
+                        formatter={(value) => `₹${value.toFixed(2)}`}
                         contentStyle={{
                         backgroundColor: "hsl(var(--popover))",
                         border: "1px solid hsl(var(--border))",

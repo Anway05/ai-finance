@@ -51,34 +51,41 @@ export const AccountCard = ({ account }) => {
     }, [error]);
 
 return (
-    <Card className="hover:shadow-md transition-shadow group relative">
+    <Card className="card-surface rounded-2xl border border-border/70 hover:border-primary/50 transition group relative overflow-hidden">
       <Link href={`/account/${id}`}>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/2 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition" />
+        <div className="absolute -inset-px rounded-3xl border border-primary/20 opacity-0 group-hover:opacity-100 blur-[1px] transition" />
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-[radial-gradient(circle_at_20%_30%,rgba(16,185,129,0.22),transparent_38%),radial-gradient(circle_at_80%_10%,rgba(244,171,72,0.18),transparent_32%)]" />
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium capitalize">
-            {name}
-          </CardTitle>
+          <div>
+            <CardTitle className="text-base font-semibold text-white capitalize">
+              {name}
+            </CardTitle>
+            <p className="text-xs text-muted-foreground">{type.charAt(0) + type.slice(1).toLowerCase()} account</p>
+          </div>
           <Switch
             checked={isDefault}
             onClick={handleDefaultChange}
             disabled={updateDefaultLoading}
           />
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            ${parseFloat(balance).toFixed(2)}
+        <CardContent className="space-y-3">
+          <div className="text-3xl font-semibold text-white">
+            ₹{parseFloat(balance).toFixed(2)}
           </div>
-          <p className="text-xs text-muted-foreground">
-            {type.charAt(0) + type.slice(1).toLowerCase()} Account
-          </p>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className={`h-2.5 w-2.5 rounded-full ${isDefault ? "bg-primary" : "bg-muted-foreground/40"}`} />
+            {isDefault ? "Default account" : "Tap to set as default"}
+          </div>
         </CardContent>
         <CardFooter className="flex justify-between text-sm text-muted-foreground">
           <div className="flex items-center">
-            <ArrowUpRight className="mr-1 h-4 w-4 text-green-500" />
-            Income
+            <ArrowUpRight className="mr-1 h-4 w-4 text-teal-300" />
+            Income ready
           </div>
           <div className="flex items-center">
-            <ArrowDownRight className="mr-1 h-4 w-4 text-red-500" />
-            Expense
+            <ArrowDownRight className="mr-1 h-4 w-4 text-amber-300" />
+            Expense watch
           </div>
         </CardFooter>
       </Link>
