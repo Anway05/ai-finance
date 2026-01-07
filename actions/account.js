@@ -3,6 +3,7 @@
 import { db }from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { checkUser } from "@/lib/checkUser";
 
 const serializeDecimal = (obj) => {
 
@@ -23,9 +24,7 @@ export const getAccountWithTransactions = async (accountId) => {
 
     if(!userId) throw new Error("Unauthorized");
 
-    const user = await db.user.findUnique({
-        where: { clerkUserId: userId },
-    });
+    const user = await checkUser();
 
     if(!user) throw new Error("User not found");
 
@@ -57,9 +56,7 @@ export const updateDefaultAccount = async (accountId) => {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
-    const user = await db.user.findUnique({
-      where: { clerkUserId: userId },
-    });
+    const user = await checkUser();
 
     if (!user) {
       throw new Error("User not found");
@@ -99,9 +96,7 @@ export const bulkDeleteTransactions = async (transactionIds) => {
         const { userId } = await auth();
         if(!userId) throw new Error("Unauthorized");
 
-        const user = await db.user.findUnique({
-            where: { clerkUserId: userId },
-        });
+        const user = await checkUser();
 
         if(!user) throw new Error("User not found");
 
@@ -115,9 +110,7 @@ export const deleteAccount = async (accountId) => {
         const { userId } = await auth();
         if (!userId) throw new Error("Unauthorized");
 
-        const user = await db.user.findUnique({
-            where: { clerkUserId: userId },
-        });
+        const user = await checkUser();
 
         if (!user) throw new Error("User not found");
 
