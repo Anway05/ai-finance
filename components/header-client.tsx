@@ -34,7 +34,7 @@ const HeaderClient = () => {
             <Link href="/" className="group flex items-center gap-3">
               <div className="relative h-11 w-11 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
                 <Image
-                  src="/logo-v5.png"
+                  src="/logo.png"
                   alt="MyWallet Logo"
                   width={44}
                   height={44}
